@@ -42,7 +42,7 @@ describe("App", () => {
       const todoInput: HTMLInputElement = container.querySelector("#todo-input");
       fireEvent.change(todoInput, { value: todoListItem.label });
 
-      console.log("keyyypressed", fireEvent.keyPress(todoInput, { key: "Enter", code: 13, charCode: 13 }))
+      fireEvent.keyPress(todoInput, { key: "Enter", code: 13, charCode: 13 })
 
       // check todo-list in local storage
       let listFromLocalStorage = localStorage.getItem('todo-list');
@@ -94,7 +94,6 @@ describe("App", () => {
       // find added todo item and clicked it
       // find checkbox
       const testTodoItem = container.querySelectorAll(`ul > label > input[type="checkbox"]`);
-      console.log("testTodoItem", testTodoItem[0])
       fireEvent.click(testTodoItem[0]);
 
       // get all list items
