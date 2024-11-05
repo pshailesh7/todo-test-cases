@@ -10,7 +10,7 @@ import App from "./App";
 const todoListItem: Todo = {
   id: uuid(),
   label: "Test todo item",
-  checked: false // false by defaultgit push -u origin main
+  checked: false // false by default
 };
 
 describe("App", () => {
@@ -91,7 +91,6 @@ describe("App", () => {
       fireEvent.change(todoInput, { value: todoListItem.label });
       fireEvent.keyPress(todoInput, { key: "Enter", code: 13, charCode: 13 });
 
-      // find added todo item and clicked it
       // find checkbox
       const testTodoItem = container.querySelectorAll(`ul > label > input[type="checkbox"]`);
       fireEvent.click(testTodoItem[0]);
