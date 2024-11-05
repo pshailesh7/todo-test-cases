@@ -47,7 +47,7 @@ The following code changes were made to facilitate testing:
 * Modified the `TodoList` component to use the `index` property to create a unique `key` for each todo item when rendering the list.
 
 ## Known Issues
-Please note that currently all the test cases are failing due to not having the code for storing and retrieving the todo list from local storage. This is intentional as the task is to implement the required code for the test cases to pass.
+Please note that currently all the test cases are failing due to not having the code for storing and retrieving the todo list from local storage, Also the click event for complete the task is not working. This is intentional as the task is to implement the required code for the test cases to pass.
 
 ## Running Tests
 
