@@ -48,6 +48,7 @@ export const TodoItem: FC<TodoItemProps> = ({
 }) => {
   return (
     <Wrapper id={`todo-item-${index}`}>
+      {/* {console.log("todooos", label, checked)} */}
       <Checkbox
         type="checkbox"
         id={id}

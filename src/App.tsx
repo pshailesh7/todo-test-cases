@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import styled from "@emotion/styled";
 import { AddInput } from "./components/AddInput";
@@ -41,7 +41,22 @@ const initialData: Todo[] = [
 ];
 
 function App() {
-  const [todos, setTodos] = useState<Todo[]>(initialData);
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  useEffect(() => {
+    const savedTodos = localStorage.getItem('todo-list');
+    if (savedTodos) {
+      setTodos(JSON.parse(savedTodos));
+    }
+  }, []);
+
+  // Update localStorage whenever the todos list changes
+  useEffect(() => {
+    if (todos.length > 0) {
+      localStorage.setItem('todo-list', JSON.stringify(todos));
+    }
+    console.log("UseEffect", localStorage.getItem('todo-list'))
+  }, [todos]);
 
   const addTodo = useCallback((label: string) => {
     setTodos((prev) => [
@@ -54,9 +69,18 @@ function App() {
     ]);
   }, []);
 
-  const handleChange = useCallback((checked: boolean) => {
-    // handle the check/uncheck logic
+  const handleChange = useCallback((checked: boolean, index: number) => {
+    setTodos((prev) => {
+      let newTodos = [...prev];
+      let changedIndex = { ...newTodos[index] }
+      changedIndex.checked = checked;
+      // remove index from array and add at last position
+      newTodos.splice(index, 1);
+      newTodos.push(changedIndex);
+      return newTodos;
+    });
   }, []);
+
 
   return (
     <Wrapper>

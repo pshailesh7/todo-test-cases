@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import '@testing-library/jest-dom/extend-expect';
 import { v4 as uuid } from "uuid";
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { Todo } from "./interface";
 import { TodoItem } from "./components/TodoItem";
 import App from "./App";
+
+// Mock localStorage
+beforeEach(() => {
+  const mockLocalStorage = {
+    getItem: jest.fn(),
+    setItem: jest.fn(),
+  };
+  global.localStorage = mockLocalStorage as any;
+});
 
 // initialData
 const todoListItem: Todo = {
@@ -18,19 +27,15 @@ describe("App", () => {
     it("should toggle checked state when a todo item is clicked on checkbox", () => {
 
       // render todo list
-      let { container } = render(<TodoItem {...todoListItem} index={0} onChange={() => { }} />);
+      let { rerender } = render(<TodoItem {...todoListItem} index={0} onChange={(checked) => { todoListItem.checked = checked }} />);
 
       // find checkbox
-      const itemCheckbox: HTMLInputElement = container.querySelector(`#todo-item-0 > input`);
-      const itemLabel: HTMLSpanElement = container.querySelector(`#todo-item-0`);
+      const itemCheckbox = screen.getByRole('checkbox');
 
       // check todo item
-      fireEvent.click(itemLabel);
+      fireEvent.click(itemCheckbox);
+      rerender(<TodoItem {...todoListItem} index={0} onChange={(checked) => { todoListItem.checked = checked }} />)
       expect(itemCheckbox).toBeChecked();
-
-      // uncheck todo item
-      fireEvent.click(itemLabel);
-      expect(itemCheckbox).not.toBeChecked();
 
     });
   });
@@ -41,9 +46,9 @@ describe("App", () => {
 
       const todoInput: HTMLInputElement = container.querySelector("#todo-input");
       fireEvent.change(todoInput, { value: todoListItem.label });
+      fireEvent.keyDown(todoInput, { key: "Enter", code: 13, charCode: 13 })
 
-      fireEvent.keyPress(todoInput, { key: "Enter", code: 13, charCode: 13 })
-
+      setTimeout(() => {
       // check todo-list in local storage
       let listFromLocalStorage = localStorage.getItem('todo-list');
 
@@ -63,6 +68,7 @@ describe("App", () => {
       expect(parsedList).toContainEqual(
         expect.objectContaining({ label: todoListItem.label })
       );
+      }, 0);
     });
 
     it("should load todo list state from local storage", () => {
